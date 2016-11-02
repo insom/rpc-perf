@@ -92,6 +92,7 @@ struct RedisParse;
 
 struct RedisParseFactory {
     flush: bool,
+    database: String,
 }
 
 impl ProtocolGen for Command {
@@ -148,7 +149,10 @@ pub fn load_config(table: &BTreeMap<String, Value>, matches: &Matches) -> CResul
             }
         }
 
-        let proto = Arc::new(RedisParseFactory { flush: matches.opt_present("flush") });
+        let proto = Arc::new(RedisParseFactory {
+            flush: matches.opt_present("flush"),
+            database: matches.opt_str("database").unwrap_or_default()
+        });
 
         Ok(ProtocolConfig {
             protocol: proto,
